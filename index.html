@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#08090b">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="FocusFrame">
+  <meta name="description" content="Private Kamera für lange Zeitraffer und Gym-Videos.">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" type="image/png" href="icon-192.png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <style>html,body{background:#08090b;color:#f7f2e7;margin:0;font-family:system-ui,-apple-system,sans-serif}</style>
+  <link rel="stylesheet" href="styles.css?v=5">
+  <script src="app.js?v=5" defer></script>
+  <title>FocusFrame</title>
+</head>
+<body>
+  <div id="app">
+    <header class="topbar">
+      <span class="wordmark">FOCUS<span>FRAME</span></span>
+      <span class="local-mark"><span class="local-mark-dot"></span> NUR AUF DEINEM GERÄT</span>
+    </header>
+
+    <main>
+      <section class="view active" id="view-camera" aria-label="Kamera">
+        <div class="intro">
+          <div class="eyebrow">DEIN FOKUSSTUDIO <span class="eyebrow-rule"></span> 01</div>
+          <h1>Deine Zeit. <em>Dein Beweis.</em></h1>
+          <p>Zeitraffer für lange Sessions. Normale Videos für dein Training.</p>
+        </div>
+
+        <div class="studio">
+          <div class="mode-switch" role="group" aria-label="Aufnahmemodus">
+            <button class="mode-btn selected" id="modeTimelapse" data-mode="timelapse" type="button" aria-pressed="true">Zeitraffer <span class="mode-sub">Lange Sessions</span></button>
+            <button class="mode-btn" id="modeVideo" data-mode="video" type="button" aria-pressed="false">Gym-Video <span class="mode-sub">Echtzeit</span></button>
+          </div>
+
+          <div class="camera-stage" id="cameraStage">
+            <video id="livePreview" autoplay muted playsinline webkit-playsinline aria-label="Kameravorschau"></video>
+            <div class="camera-idle" id="cameraIdle">
+              <div class="idle-lens" aria-hidden="true"></div>
+              <p>Dein Studio ist bereit.</p>
+              <button id="activateCamera" type="button" class="activate-btn">Kamera einschalten</button>
+            </div>
+            <div class="preview-gradient" aria-hidden="true"></div>
+            <span class="record-indicator" id="recordIndicator" hidden><span></span> REC</span>
+            <button id="flipCamera" class="flip-button" type="button" aria-label="Zwischen Front- und Rückkamera wechseln" title="Kamera wechseln">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11a8 8 0 0 0-14.8-4.2M4 4v4h4M4 13a8 8 0 0 0 14.8 4.2M20 20v-4h-4"/></svg>
+              <span id="flipLabel">Selfie</span>
+            </button>
+            <div class="camera-bottom">
+              <div class="capture-label" id="captureStatus">BEREIT ZUM START</div>
+              <div class="elapsed" id="timerDisplay">00:00:00</div>
+              <div class="preview-info" id="previewInfo">30-Sekunden-Zeitraffer mit Timer</div>
+            </div>
+          </div>
+
+          <div class="controls">
+            <input id="sessionTitle" type="hidden" value="">
+            <button id="startStop" type="button" class="record-button"><span class="record-mark" aria-hidden="true"></span><span id="startLabel">Aufnahme starten</span><span class="record-button-tail" id="buttonTail">START</span></button>
+            <div class="extras">
+              <button id="dimButton" type="button" class="dim-button" disabled>
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.98 13a9 9 0 0 1-9.98-9.98A9 9 0 1 0 20.98 13Z"/></svg>
+                Schwarzbild
+              </button>
+              <label class="autodim-option"><span>Auto nach 15 s</span><input id="autoDimSetting" type="checkbox" checked><span class="switch-track"></span></label>
+            </div>
+            <p id="modeExplanation" class="mode-explanation">Die App speichert wenige Einzelbilder und erstellt am Ende einen etwa 30 Sekunden langen Zeitraffer mit eingeblendeter echter Aufnahmezeit.</p>
+          </div>
+        </div>
+        <p class="important-note">Die tatsächliche iPhone-Helligkeit kann eine Website nicht verstellen. Das Schwarzbild dunkelt die App ab. Für Kameraaufnahmen muss die App im Vordergrund bleiben.</p>
+      </section>
+
+      <section class="view" id="view-library" aria-label="Aufnahmen">
+        <div class="library-heading"><div class="eyebrow">DEINE AUFNAHMEN <span class="eyebrow-rule"></span> 02</div><h1>Deine <em>Sessions.</em></h1><p>Lokal gespeichert. Ansehen, exportieren oder endgültig löschen.</p></div>
+        <div id="libraryList" class="library-list"><div class="empty-state">Noch keine Aufnahmen. Starte deine erste Session.</div></div>
+      </section>
+    </main>
+
+    <nav class="bottom-nav" aria-label="Navigation">
+      <button class="nav-btn active" id="tabCamera" data-tab="camera" type="button" aria-current="page">
+        <svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4H9l-2 3H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-3-3Z"/><circle cx="12" cy="13" r="4"/></svg><span>Kamera</span>
+      </button>
+      <button class="nav-btn" id="tabLibrary" data-tab="library" type="button">
+        <svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M3 9h18M9 9v12"/></svg><span>Aufnahmen</span>
+      </button>
+    </nav>
+  </div>
+
+  <div id="dimScreen" class="dim-screen" aria-hidden="true">
+    <div class="dim-main"><span class="dim-live">AUFNAHME LÄUFT</span><div id="dimTime" class="dim-time">00:00:00</div><p>Schwarzbild aktiv</p></div>
+    <div class="dim-actions"><button type="button" id="dimRestore">Vorschau öffnen</button><button type="button" id="dimStop">Beenden & speichern</button></div>
+  </div>
+  <div id="toast" role="status" aria-live="polite" class="toast"></div>
+  <dialog id="videoDialog" class="video-dialog">
+    <div class="dialog-heading"><strong id="dialogTitle">Deine Session</strong><button id="closeDialog" aria-label="Schließen" type="button">Schließen</button></div>
+    <video id="savedVideo" playsinline controls></video><img id="savedImage" alt="Bildübersicht" hidden>
+    <p id="dialogInfo"></p><button id="shareVideo" class="record-button dialog-export" type="button">Video teilen / speichern</button>
+  </dialog>
+</body>
+</html>
